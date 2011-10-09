@@ -23,38 +23,58 @@ public class ShowResturantsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ArrayList<Resturant> resturants = null;
-        boolean foundArea = false;
+        URL url = null;
         try {
-        	foundArea = mArea.setArea(new URL((String) getResources().getText(R.string.defaultArea)));
+        	url = new URL((String) getResources().getText(R.string.defaultArea));
 		} catch (MalformedURLException e) {
-			// TODO Skapa alertdialog som säger att det inte gick att komma åt servern, avsluta sedan appen 
-			e.printStackTrace();
+			showAlertDialogBadUrlToArea();
 		}
         
-		if(foundArea) {
+		if(mArea.setArea(url)) {
 			resturants = mArea.getResturantArray();
 	        final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
 
 	        mResturantListView = (ResturantListView)findViewById(R.id.my_list);
 	        mResturantListView.setAdapter(adapter);
 		} else {
-			AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-			alt_bld.setMessage("Appen lyckades inte få kontakt med servern. Försök igen senare! " +
-					getResources().getText(R.string.app_name) + " kommer att avslutas.");
-			alt_bld.setCancelable(false);
-			alt_bld.setPositiveButton("Avsluta", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					finish();
-				}
-			});
-			AlertDialog alert = alt_bld.create();
-			// Title for AlertDialog
-			alert.setTitle("Problem");
-			// Icon for AlertDialog
-			alert.setIcon(R.drawable.icon);
-			alert.show();
+			showAlertDialogNoServer();
 		}
     }
+
+	private void showAlertDialogBadUrlToArea() {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+		alt_bld.setMessage("Trasig url till restuarant area. Ändra i inställningarna");
+		alt_bld.setCancelable(false);
+		alt_bld.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// Do nothing
+			}
+		});
+		AlertDialog alert = alt_bld.create();
+		// Title for AlertDialog
+		alert.setTitle("Problem");
+		// Icon for AlertDialog
+		alert.setIcon(R.drawable.icon);
+		alert.show();
+	}
+
+	private void showAlertDialogNoServer() {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+		alt_bld.setMessage("Appen lyckades inte få kontakt med servern. Försök igen senare! " +
+				getResources().getText(R.string.app_name) + " kommer att avslutas.");
+		alt_bld.setCancelable(false);
+		alt_bld.setPositiveButton("Avsluta", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				finish();
+			}
+		});
+		AlertDialog alert = alt_bld.create();
+		// Title for AlertDialog
+		alert.setTitle("Problem");
+		// Icon for AlertDialog
+		alert.setIcon(R.drawable.icon);
+		alert.show();
+	}
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -81,15 +101,15 @@ public class ShowResturantsActivity extends Activity {
         }
     }
     
-	private ArrayList<Resturant> createResturantList(int size) {
-        final ArrayList<Resturant> resturants = new ArrayList<Resturant>();
-        for (int i = 0; i < size; i++) {
-        	Resturant r = new Resturant("Resturang "+i);
-        	r.addMenuItem("rätt 1");
-        	r.addMenuItem("rätt 2");
-        	r.addMenuItem("rätt 3");
-            resturants.add(r);
-        }
-        return resturants;
-	}
+//	private ArrayList<Resturant> createResturantList(int size) {
+//        final ArrayList<Resturant> resturants = new ArrayList<Resturant>();
+//        for (int i = 0; i < size; i++) {
+//        	Resturant r = new Resturant("Resturang "+i);
+//        	r.addMenuItem("rätt 1");
+//        	r.addMenuItem("rätt 2");
+//        	r.addMenuItem("rätt 3");
+//            resturants.add(r);
+//        }
+//        return resturants;
+//	}
 }

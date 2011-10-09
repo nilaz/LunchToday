@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">Hello World, ShowResturants!</string>
-    <string name="app_name">Dagens lunch</string>
+    <string name="app_name">Dagens Lunch</string>
+    <string name="ok">OK</string>
+    <string name="aboutText">LunchToday är utvecklad av Niklas Lanzén.</string>
+    <string name="aboutText2">Se http://blogg.lanzen.se/tag/lunchtoday för nyheter</string>
+    <string name="version">0.1.1</string>
+    <string name="defaultArea">http://www.lanzen.se/LunchToday/MjardeviArea.properties</string>
 </resources>

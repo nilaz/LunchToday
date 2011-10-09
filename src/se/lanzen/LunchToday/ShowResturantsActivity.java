@@ -4,7 +4,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 
 public class ShowResturantsActivity extends Activity {
 	ResturantArea mArea = new ResturantArea();
@@ -19,25 +25,62 @@ public class ShowResturantsActivity extends Activity {
         ArrayList<Resturant> resturants = null;
         boolean foundArea = false;
         try {
-        	foundArea = mArea.setArea(new URL("http://www.lanzen.se/LunchToday/MjardeviArea.properties"));
+        	foundArea = mArea.setArea(new URL((String) getResources().getText(R.string.defaultArea)));
 		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
+			// TODO Skapa alertdialog som säger att det inte gick att komma åt servern, avsluta sedan appen 
 			e.printStackTrace();
 		}
         
 		if(foundArea) {
 			resturants = mArea.getResturantArray();
+	        final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
+
+	        mResturantListView = (ResturantListView)findViewById(R.id.my_list);
+	        mResturantListView.setAdapter(adapter);
 		} else {
-	        resturants = createResturantList(20);
+			AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+			alt_bld.setMessage("Appen lyckades inte få kontakt med servern. Försök igen senare! " +
+					getResources().getText(R.string.app_name) + " kommer att avslutas.");
+			alt_bld.setCancelable(false);
+			alt_bld.setPositiveButton("Avsluta", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					finish();
+				}
+			});
+			AlertDialog alert = alt_bld.create();
+			// Title for AlertDialog
+			alert.setTitle("Problem");
+			// Icon for AlertDialog
+			alert.setIcon(R.drawable.icon);
+			alert.show();
 		}
-
-        final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
-
-        mResturantListView = (ResturantListView)findViewById(R.id.my_list);
-        mResturantListView.setAdapter(adapter);
-
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        case R.id.about:
+        	startActivity(new Intent(this, AboutActivity.class));
+            return true;
+        case R.id.area:
+        	// TODO Hantera preference för current area
+            return true;
+        case R.id.preference:
+        	// TODO Hantera preference för app
+            return true;
+        default:
+            return super.onOptionsItemSelected(item);
+        }
+    }
+    
 	private ArrayList<Resturant> createResturantList(int size) {
         final ArrayList<Resturant> resturants = new ArrayList<Resturant>();
         for (int i = 0; i < size; i++) {
@@ -49,42 +92,4 @@ public class ShowResturantsActivity extends Activity {
         }
         return resturants;
 	}
-
-	/* Old
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-	  super.onCreate(savedInstanceState);
-	  mArea = new ResturantArea();
-	  mArea.setArea(getDefaultArea());
-	  
-	  setListAdapter(new ArrayAdapter<String>(this, R.layout.list_item, mArea.getResturantNames()));
-
-	  ListView lv = getListView();
-	  lv.setTextFilterEnabled(true);
-
-	  lv.setOnItemClickListener(new OnItemClickListener() {
-	    public void onItemClick(AdapterView<?> parent, View view,
-	        int position, long id) {
-	      // When clicked, show a toast with the TextView text
-//		      Toast.makeText(getApplicationContext(), ((TextView) view).getText(),
-//			          Toast.LENGTH_SHORT).show();
-		      Toast.makeText(getApplicationContext(), mArea.getResturant((String)((TextView) view).getText()).getMenu(),
-		    		  Toast.LENGTH_LONG).show();
-	    }
-	  });
-	}
-*/
-	/*
-	private URL getDefaultArea() {
-		// TODO Hardcoded...
-		URL url;
-		try {
-			url = new URL("http://www.lanzen.se/LunchToday/MjardeviArea.properties");
-		} catch (MalformedURLException e) {
-			e.printStackTrace();
-			return null;
-		}
-		return url;
-	}	
-	*/
 }

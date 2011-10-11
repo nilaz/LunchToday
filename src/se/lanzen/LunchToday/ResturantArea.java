@@ -12,8 +12,11 @@ public class ResturantArea {
 	public static final String AREA_NAME = "Area_Name";
 	public static final String RESTURANT_NAME ="Resturant_%d_Name";
 	public static final String RESTURANT_MENUITEM ="Resturant_%d_MenuItem_%d";
+	public static final String CURRENT_DATE = "CurrentDate";
+	
 	final private ArrayList<Resturant> mResturants = new ArrayList<Resturant>();
 	private String mAreaName = null;
+	private String mCurrentDate = null;
 	
 	public ResturantArea() {
 		mAreaName = null;
@@ -27,6 +30,9 @@ public class ResturantArea {
 		mAreaName = prop.getProperty(AREA_NAME);
 		if(mAreaName == null)
 			return false;
+
+		// Read date
+		mCurrentDate = prop.getProperty(CURRENT_DATE);
 
 		// Read resturants
 		return readResturants(prop);
@@ -50,6 +56,10 @@ public class ResturantArea {
 
 	public String getAreaName() {
 		return mAreaName;
+	}
+	
+	public String getCurrentDate() {
+		return mCurrentDate;
 	}
 	
 	public List<String> getResturantNames() {

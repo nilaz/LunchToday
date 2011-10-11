@@ -36,9 +36,12 @@ public class ShowResturantsActivity extends Activity {
 
 	        mResturantListView = (ResturantListView)findViewById(R.id.my_list);
 	        mResturantListView.setAdapter(adapter);
+	        
 		} else {
 			showAlertDialogNoServer();
 		}
+		
+		setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
     }
 
 	private void showAlertDialogBadUrlToArea() {

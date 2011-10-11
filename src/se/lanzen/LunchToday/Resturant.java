@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Resturant {
 	private String mName;
+	
 	final private List<String> mMenuItems = new ArrayList<String>();
 	public Resturant(String name) {
 		mName = name;

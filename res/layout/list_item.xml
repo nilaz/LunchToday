@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="100px"
     android:layout_height="wrap_content"
-    android:background="@drawable/background"
+    android:background="@drawable/background_black"
     android:padding="15dip"
 >
     <ImageView
@@ -17,13 +17,13 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/resturant_photo"
         android:paddingBottom="5dip"
-        android:textSize="16dip"/>
+        android:textStyle="bold"
+        android:textSize="20dip"/>
     <TextView
         android:id="@+id/resturant_menu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/resturant_photo"
         android:layout_below="@id/resturant_name"
-        android:textSize="14dip"/>
-
+        android:textSize="18dip"/>
 </RelativeLayout>

@@ -13,10 +13,12 @@ public class ResturantArea {
 	public static final String RESTURANT_NAME ="Resturant_%d_Name";
 	public static final String RESTURANT_MENUITEM ="Resturant_%d_MenuItem_%d";
 	public static final String CURRENT_DATE = "CurrentDate";
+	public static final String LATEST_VERSION = "LatestVersion";
 	
 	final private ArrayList<Resturant> mResturants = new ArrayList<Resturant>();
 	private String mAreaName = null;
 	private String mCurrentDate = null;
+	private int mLatestVersion = 0;
 	
 	public ResturantArea() {
 		mAreaName = null;
@@ -33,6 +35,9 @@ public class ResturantArea {
 
 		// Read date
 		mCurrentDate = prop.getProperty(CURRENT_DATE);
+
+		// Read Latest version
+		mLatestVersion = Integer.parseInt(prop.getProperty(LATEST_VERSION));
 
 		// Read resturants
 		return readResturants(prop);
@@ -60,6 +65,10 @@ public class ResturantArea {
 	
 	public String getCurrentDate() {
 		return mCurrentDate;
+	}
+	
+	public int getLatestVersion() {
+		return mLatestVersion;
 	}
 	
 	public List<String> getResturantNames() {

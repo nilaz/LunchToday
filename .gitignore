@@ -1,6 +1,7 @@
 bin
 gen
 
+.git.old
 #built application files
 *.apk
 *.ap_

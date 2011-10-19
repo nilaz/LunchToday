@@ -1,9 +1,25 @@
 package se.lanzen.LunchToday;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,10 +45,13 @@ public class ShowResturantsActivity extends Activity {
         try {
         	url = new URL((String) getResources().getText(R.string.defaultArea));
 		} catch (MalformedURLException e) {
+			Log.i("onCreate", "Bad url");
 			showAlertDialogBadUrlToArea();
 		}
-        
-		if(mArea.setArea(url)) {
+
+        // Read json file with default area
+        JSONObject jsonDefaultArea = getJSONfromURL((String) getResources().getText(R.string.defaultArea));
+		if(mArea.setArea(jsonDefaultArea)) {
 			resturants = mArea.getResturantArray();
 	        final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
 
@@ -40,19 +59,42 @@ public class ShowResturantsActivity extends Activity {
 	        mResturantListView.setAdapter(adapter);
 	        
 		} else {
+			Log.e("no server", "Bad url");
 			showAlertDialogNoServer();
 		}
 		setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
-		checkForNewVersion();
+		//checkForNewVersion();
     }
 
 	private void checkForNewVersion() {
 		int currentVersion = getCurrentVersion();
-		int latestVersion = mArea.getLatestVersion();
+		int latestVersion = getLatestVersion();
 		if(currentVersion < latestVersion) {
 			showAlertDialogNewVersionAvailable();
 		}
 		
+	}
+
+	private int getCurrentVersion() {
+		PackageInfo pinfo;
+		try {
+			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			return pinfo.versionCode;
+		} catch (NameNotFoundException e) {
+			// Can not happen
+		}
+		return 999999;
+	}
+
+	private int getLatestVersion() {
+		JSONObject json = getJSONfromURL((String) getResources().getText(R.string.latestVersionURL));
+		try {
+			return json.getInt((String) getResources().getText(R.string.latestVersion));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return 0;
 	}
 
 	private void showAlertDialogNewVersionAvailable() {
@@ -74,16 +116,6 @@ public class ShowResturantsActivity extends Activity {
 		
 	}
 
-	private int getCurrentVersion() {
-		PackageInfo pinfo;
-		try {
-			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			return pinfo.versionCode;
-		} catch (NameNotFoundException e) {
-			// Can not happen
-		}
-		return 999999;
-	}
 
 	private void showAlertDialogBadUrlToArea() {
 		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
@@ -145,15 +177,42 @@ public class ShowResturantsActivity extends Activity {
         }
     }
     
-//	private ArrayList<Resturant> createResturantList(int size) {
-//        final ArrayList<Resturant> resturants = new ArrayList<Resturant>();
-//        for (int i = 0; i < size; i++) {
-//        	Resturant r = new Resturant("Resturang "+i);
-//        	r.addMenuItem("rätt 1");
-//        	r.addMenuItem("rätt 2");
-//        	r.addMenuItem("rätt 3");
-//            resturants.add(r);
-//        }
-//        return resturants;
-//	}
+	private  JSONObject getJSONfromURL(String url){
+		StringBuilder builder = new StringBuilder();
+		HttpClient client = new DefaultHttpClient();
+		HttpGet httpGet = new HttpGet(url);
+		System.out.println("First");
+
+		try {
+			HttpResponse response = client.execute(httpGet);
+			StatusLine statusLine = response.getStatusLine();
+			int statusCode = statusLine.getStatusCode();
+			if (statusCode == 200) {
+				HttpEntity entity = response.getEntity();
+				InputStream content = entity.getContent();
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(content));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					builder.append(line);
+				}
+			} else {
+				return null;
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(builder.toString());
+		JSONObject object;
+		try {
+			object = new JSONObject(builder.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+		return object;
+	}
 }

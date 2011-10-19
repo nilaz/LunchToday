@@ -1,12 +1,25 @@
 package se.lanzen.LunchToday;
 
 import java.util.Properties;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ResturantArea {
 	public static final String AREA_NAME = "Area_Name";
@@ -14,47 +27,41 @@ public class ResturantArea {
 	public static final String RESTURANT_MENUITEM ="Resturant_%d_MenuItem_%d";
 	public static final String CURRENT_DATE = "CurrentDate";
 	public static final String LATEST_VERSION = "LatestVersion";
+	public static final String RESTURANT_LIST = "ResturantList";
+	public static final String RESTURANT = "Resturant";
+	public static final String MENU = "Menu";
 	
 	final private ArrayList<Resturant> mResturants = new ArrayList<Resturant>();
 	private String mAreaName = null;
 	private String mCurrentDate = null;
-	private int mLatestVersion = 0;
 	
 	public ResturantArea() {
 		mAreaName = null;
 		mResturants.clear();
 	}
-	public boolean setArea(URL areaURL) {
-		Properties prop = readPropertiesFromFile(areaURL);
-		if(prop == null)
-			return false;
+	public boolean setArea(JSONObject object) {
+		mAreaName = "Test";
+		mCurrentDate = "FooBar";
 		
-		mAreaName = prop.getProperty(AREA_NAME);
-		if(mAreaName == null)
-			return false;
-
-		// Read date
-		mCurrentDate = prop.getProperty(CURRENT_DATE);
-
-		// Read Latest version
-		mLatestVersion = Integer.parseInt(prop.getProperty(LATEST_VERSION));
-
-		// Read resturants
-		return readResturants(prop);
-	}
-	private boolean readResturants(Properties prop) {
-		Resturant resturant;
-		for(int resturantIndex = 0; (prop.getProperty(String.format(RESTURANT_NAME,resturantIndex))) != null; resturantIndex++){
-			String resturantName = prop.getProperty(String.format(RESTURANT_NAME,resturantIndex));
-			resturant = new Resturant(resturantName);
-			mResturants.add(resturant);
-			// Read menu
-			for(int item = 0; (prop.getProperty(String.format(RESTURANT_MENUITEM, resturantIndex,item))) != null; item++) {
-				String menuItem = prop.getProperty(String.format(RESTURANT_MENUITEM, resturantIndex,item));
-				if(menuItem == null)
-					return false;
-				resturant.addMenuItem(menuItem);
+		try {
+			mAreaName = object.getString(AREA_NAME);
+		
+			// Read date
+			mCurrentDate = object.getString(CURRENT_DATE);
+			
+			JSONArray resturants = object.getJSONArray(RESTURANT_LIST);
+			for(int i = 0; i < resturants.length(); i++) {
+				JSONObject jsonRes = resturants.getJSONObject(i);
+				Resturant resturant = new Resturant(jsonRes.getString(RESTURANT));
+				mResturants.add(resturant);
+				JSONArray menu = jsonRes.getJSONArray(MENU);
+				for(int j = 0; j < menu.length(); j++) {
+					resturant.addMenuItem(menu.getString(j));
+				}
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}
@@ -67,10 +74,6 @@ public class ResturantArea {
 		return mCurrentDate;
 	}
 	
-	public int getLatestVersion() {
-		return mLatestVersion;
-	}
-	
 	public List<String> getResturantNames() {
 		List<String> r = new ArrayList<String>();
 		Iterator<Resturant> e = mResturants.iterator();
@@ -78,21 +81,6 @@ public class ResturantArea {
 	      r.add(e.next().getName());
 	    }
 		return r;
-	}
-	private static Properties readPropertiesFromFile(URL url){
-		java.util.Properties defaultProps = new Properties();
-	    InputStream in = null;
-
-	    try {
-			in = url.openStream();
-			//BufferedInputStream bis = new BufferedInputStream(in);
-			//defaultProps.load(new InputStreamReader(bis,"UTF-8"));
-			defaultProps.load(in);
-		} catch (IOException e) {
-			//e.printStackTrace();
-			return null;
-		}
-		return defaultProps;
 	}
 
 	public Resturant getResturant(String name) {

@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -41,13 +39,6 @@ public class ShowResturantsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ArrayList<Resturant> resturants = null;
-        URL url = null;
-        try {
-        	url = new URL((String) getResources().getText(R.string.defaultArea));
-		} catch (MalformedURLException e) {
-			Log.i("onCreate", "Bad url");
-			showAlertDialogBadUrlToArea();
-		}
 
         // Read json file with default area
         JSONObject jsonDefaultArea = getJSONfromURL((String) getResources().getText(R.string.defaultArea));
@@ -114,24 +105,6 @@ public class ShowResturantsActivity extends Activity {
 		alert.show();
 
 		
-	}
-
-
-	private void showAlertDialogBadUrlToArea() {
-		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-		alt_bld.setMessage("Trasig url till restuarant area. Ändra i inställningarna");
-		alt_bld.setCancelable(false);
-		alt_bld.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				// Do nothing
-			}
-		});
-		AlertDialog alert = alt_bld.create();
-		// Title for AlertDialog
-		alert.setTitle("Problem");
-		// Icon for AlertDialog
-		alert.setIcon(R.drawable.dagens_lunch);
-		alert.show();
 	}
 
 	private void showAlertDialogNoServer() {

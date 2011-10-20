@@ -63,7 +63,7 @@ public class ShowResturantsActivity extends Activity {
 			showAlertDialogNoServer();
 		}
 		setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
-		//checkForNewVersion();
+		checkForNewVersion();
     }
 
 	private void checkForNewVersion() {
@@ -110,7 +110,7 @@ public class ShowResturantsActivity extends Activity {
 		// Title for AlertDialog
 		alert.setTitle("Ny version");
 		// Icon for AlertDialog
-		alert.setIcon(R.drawable.icon);
+		alert.setIcon(R.drawable.dagens_lunch);
 		alert.show();
 
 		
@@ -130,7 +130,7 @@ public class ShowResturantsActivity extends Activity {
 		// Title for AlertDialog
 		alert.setTitle("Problem");
 		// Icon for AlertDialog
-		alert.setIcon(R.drawable.icon);
+		alert.setIcon(R.drawable.dagens_lunch);
 		alert.show();
 	}
 
@@ -191,7 +191,7 @@ public class ShowResturantsActivity extends Activity {
 				HttpEntity entity = response.getEntity();
 				InputStream content = entity.getContent();
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
+						new InputStreamReader(content,"UTF-8"));
 				String line;
 				while ((line = reader.readLine()) != null) {
 					builder.append(line);

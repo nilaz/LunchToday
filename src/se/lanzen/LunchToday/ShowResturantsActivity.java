@@ -21,23 +21,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
-public class ShowResturantsActivity extends Activity {
+public class ShowResturantsActivity extends ListActivity {
 	ResturantArea mArea = new ResturantArea();
-	
-    /** The list view */
-    private ResturantListView mResturantListView;
 	
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
+        //setContentView(R.layout.main);
         ArrayList<Resturant> resturants = null;
 
         // Read json file with default area
@@ -46,9 +43,7 @@ public class ShowResturantsActivity extends Activity {
 			resturants = mArea.getResturantArray();
 	        final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
 
-	        mResturantListView = (ResturantListView)findViewById(R.id.my_list);
-	        mResturantListView.setAdapter(adapter);
-	        
+			this.setListAdapter(adapter);
 		} else {
 			Log.e("no server", "Bad url");
 			showAlertDialogNoServer();
@@ -58,7 +53,7 @@ public class ShowResturantsActivity extends Activity {
     }
 
 	private void checkForNewVersion() {
-		int currentVersion = getCurrentVersion();
+		int currentVersion = getCurrentVersion();	
 		int latestVersion = getLatestVersion();
 		if(currentVersion < latestVersion) {
 			showAlertDialogNewVersionAvailable();
@@ -121,7 +116,7 @@ public class ShowResturantsActivity extends Activity {
 		// Title for AlertDialog
 		alert.setTitle("Problem");
 		// Icon for AlertDialog
-		alert.setIcon(R.drawable.icon);
+		alert.setIcon(R.drawable.dagens_lunch);
 		alert.show();
 	}
 
@@ -150,7 +145,7 @@ public class ShowResturantsActivity extends Activity {
         }
     }
     
-	private  JSONObject getJSONfromURL(String url){
+	private JSONObject getJSONfromURL(String url){
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);

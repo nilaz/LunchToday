@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -50,7 +52,36 @@ public class ShowResturantsActivity extends ListActivity {
 		}
 		setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
 		checkForNewVersion();
+		checkForUpdatedMenu();
     }
+
+	private void checkForUpdatedMenu() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String currDate = sdf.format(new Date());
+		String genDate = mArea.getCurrentDate();
+		currDate = genDate;
+		if( ! currDate.equals(genDate)) {
+			showAlertDialogNoMenuforToday(currDate, genDate);
+		}
+	}
+
+	private void showAlertDialogNoMenuforToday(String currDate, String genDate) {
+		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+		alt_bld.setMessage("Notera att menyn är aktuell för " + genDate +
+				" och visar inte dagens meny. Det genereras bara menyer för vardagar.");
+		alt_bld.setCancelable(false);
+		alt_bld.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				// Do nothing
+			}
+		});
+		AlertDialog alert = alt_bld.create();
+		// Title for AlertDialog
+		alert.setTitle("Menyn ej aktuell");
+		// Icon for AlertDialog
+		alert.setIcon(R.drawable.dagens_lunch);
+		alert.show();
+	}
 
 	private void checkForNewVersion() {
 		int currentVersion = getCurrentVersion();	
@@ -97,8 +128,6 @@ public class ShowResturantsActivity extends ListActivity {
 		// Icon for AlertDialog
 		alert.setIcon(R.drawable.dagens_lunch);
 		alert.show();
-
-		
 	}
 
 	private void showAlertDialogNoServer() {
@@ -148,7 +177,6 @@ public class ShowResturantsActivity extends ListActivity {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);
-		System.out.println("First");
 
 		try {
 			HttpResponse response = client.execute(httpGet);
@@ -171,7 +199,6 @@ public class ShowResturantsActivity extends ListActivity {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println(builder.toString());
 		JSONObject object;
 		try {
 			object = new JSONObject(builder.toString());

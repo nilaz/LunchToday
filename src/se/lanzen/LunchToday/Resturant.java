@@ -1,7 +1,6 @@
 package se.lanzen.LunchToday;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class Resturant {
@@ -23,15 +22,14 @@ public class Resturant {
 
 	public String menu() {
 		String menu = "";
-		Iterator<String> e = mMenuItems.iterator();
-		boolean notLast = e.hasNext();
-	    while (notLast) {
-			menu = menu + e.next();
-			notLast = e.hasNext();
-			if(notLast)
-				menu = menu + "\n";
-	    }
-
+		boolean notFirst = false;
+		for(String dish : mMenuItems) {
+			if(notFirst) {
+				menu += "\n";
+			}
+			menu += "- " + dish;
+			notFirst = true;
+		}
 		return menu;
 	}
 

@@ -77,7 +77,6 @@ public class ShowResturantsActivity extends ListActivity {
 		try {
 			return json.getInt((String) getResources().getText(R.string.latestVersion));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return 0;
@@ -177,7 +176,6 @@ public class ShowResturantsActivity extends ListActivity {
 		try {
 			object = new JSONObject(builder.toString());
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
 		}

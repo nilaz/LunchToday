@@ -19,6 +19,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,33 +28,57 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 
 public class ShowResturantsActivity extends ListActivity {
-	ResturantArea mArea = new ResturantArea();
+	private ResturantArea mArea = new ResturantArea();
+	private SharedPreferences mPrefs;
+	private String mActiveLunchAreaName;
+	public static final String PREF_LUNCH_AREA = "PREF_LUNCH_AREA";
+	private static final int SHOW_PREFERENCES = 1;
+//	private ResturantAdapter mAdapter;
 	
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.main);
-        ArrayList<Resturant> resturants = null;
+        ResturantAdapter adapter = new ResturantAdapter(this, new ArrayList<Resturant>());
+        adapter.setNotifyOnChange(false);
+		this.setListAdapter(adapter);
+		updateFromPreferences();
+        refreshResturantArea();
+        checkForNewVersion();
+        checkForUpdatedMenu();
+    }
 
+    @Override public void onActivityResult(int requestCode,int resultCode,Intent data) { 
+    	super.onActivityResult(requestCode,resultCode,data); 
+    	if(requestCode == SHOW_PREFERENCES) { 
+			updateFromPreferences();
+			refreshResturantArea();
+    	}
+    }
+	private void refreshResturantArea() {
         // Read json file with default area
-        JSONObject jsonDefaultArea = getJSONfromURL((String) getResources().getText(R.string.defaultArea));
+        JSONObject jsonDefaultArea = getJSONfromURL(mActiveLunchAreaName);
 		if(mArea.setArea(jsonDefaultArea)) {
-			resturants = mArea.getResturantArray();
-	        final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
-
+			ArrayList<Resturant> resturants = mArea.getResturantArray();
+			final ResturantAdapter adapter = new ResturantAdapter(this, resturants);
+	        adapter.setNotifyOnChange(false);
 			this.setListAdapter(adapter);
+			adapter.notifyDataSetChanged();
+			setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
 		} else {
 			Log.e("no server", "Bad url");
 			showAlertDialogNoServer();
 		}
-		setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
-		checkForNewVersion();
-		checkForUpdatedMenu();
-    }
+	}
+
+	private void updateFromPreferences() {
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mActiveLunchAreaName = mPrefs.getString(PREF_LUNCH_AREA, (String) getResources().getText(R.string.defaultArea));
+	}
 
 	private void checkForUpdatedMenu() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -166,7 +191,7 @@ public class ShowResturantsActivity extends ListActivity {
         	// TODO Hantera preference för current area
             return true;
         case R.id.preference:
-        	startActivity(new Intent(this, AppPreference.class));            
+        	startActivityForResult(new Intent(this, AppPreference.class), SHOW_PREFERENCES);            
         	return true;
         default:
             return super.onOptionsItemSelected(item);

@@ -29,7 +29,9 @@ public class ResturantArea {
 	public boolean setArea(JSONObject object) {
 		mAreaName = "Test";
 		mCurrentDate = "FooBar";
-		
+
+		mResturants.clear();
+
 		try {
 			mAreaName = object.getString(AREA_NAME);
 		

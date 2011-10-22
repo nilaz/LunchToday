@@ -166,8 +166,8 @@ public class ShowResturantsActivity extends ListActivity {
         	// TODO Hantera preference för current area
             return true;
         case R.id.preference:
-        	// TODO Hantera preference för app
-            return true;
+        	startActivity(new Intent(this, AppPreference.class));            
+        	return true;
         default:
             return super.onOptionsItemSelected(item);
         }

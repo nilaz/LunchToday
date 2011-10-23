@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="horizontal"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" 
+  >
+        <TextView 
+        	android:text="TextView" 
+        	android:id="@+id/pref_resturant_name" 
+        	android:layout_width="wrap_content" 
+        	android:layout_height="wrap_content"
+       	/>
+
+		<RelativeLayout
+		  android:orientation="horizontal"
+		  android:layout_width="fill_parent"
+		  android:layout_height="fill_parent"
+		  android:layout_alignParentRight="true"
+          android:layout_toRightOf="@id/pref_resturant_name"
+		  android:gravity="right"
+	  	>
+
+	        <CheckBox 
+	        	android:text="" 
+	        	android:id="@+id/pref_resturant_visible" 
+	        	android:layout_width="wrap_content" 
+	        	android:layout_height="wrap_content"
+	        />
+	
+			<TextView 
+	        	android:id="@+id/pref_resturant_sortorder_dd" 
+	        	android:layout_width="wrap_content" 
+	        	android:layout_height="wrap_content"
+	 	        android:layout_toRightOf="@id/pref_resturant_visible"
+	       	/>
+	        <Spinner 
+	        	android:layout_height="wrap_content" 
+	        	android:id="@+id/pref_resturant_sortorder" 
+	        	android:layout_width="wrap_content"
+				android:drawSelectorOnTop="true"
+	 	        android:layout_toRightOf="@id/pref_resturant_sortorder_dd"
+	        />
+		</RelativeLayout>
+</RelativeLayout>

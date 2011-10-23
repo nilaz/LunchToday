@@ -86,5 +86,12 @@ public class ResturantArea {
 	public ArrayList<Resturant> getResturantArray() {
         return mResturants;
 	}
+	public ArrayList<String> getArrayListOfResturantNames() {
+		ArrayList<String> list = new ArrayList<String>();
+		for(Resturant resturant : mResturants) {
+			list.add(resturant.getName());
+		}
+		return list;
+	}
 	
 }

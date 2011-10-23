@@ -38,7 +38,7 @@ public class ShowResturantsActivity extends ListActivity {
 	private String mActiveLunchAreaName;
 	public static final String PREF_LUNCH_AREA = "PREF_LUNCH_AREA";
 	private static final int SHOW_PREFERENCES = 1;
-//	private ResturantAdapter mAdapter;
+	private static final int AREA_PREFERENCES = 2;
 	
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -57,6 +57,9 @@ public class ShowResturantsActivity extends ListActivity {
     	if(requestCode == SHOW_PREFERENCES) { 
 			updateFromPreferences();
 			refreshResturantArea();
+    	}
+    	if(requestCode == AREA_PREFERENCES) { 
+    		Log.i("ShowResturantsActivity:onActivityResult","Area uppdaterad");
     	}
     }
 	private void refreshResturantArea() {
@@ -182,13 +185,19 @@ public class ShowResturantsActivity extends ListActivity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	Log.e("ShowResturantsActivity:onOptionsItemSelected","item = " + item.getItemId());
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.about:
         	startActivity(new Intent(this, AboutActivity.class));
             return true;
         case R.id.area:
-        	// TODO Hantera preference för current area
+        	Log.e("Menu area","Preference for area");
+        	Intent intent = new Intent(this, PrefAreaActivity.class);
+        	ArrayList<String> listOfResturantNames = mArea.getArrayListOfResturantNames(); 
+        	Log.e("Menu area","Array of names = " + listOfResturantNames);
+        	intent.putExtra((String) getResources().getText(R.string.pref_resturant_names), listOfResturantNames);
+        	startActivityForResult(intent, AREA_PREFERENCES);
             return true;
         case R.id.preference:
         	startActivityForResult(new Intent(this, AppPreference.class), SHOW_PREFERENCES);            

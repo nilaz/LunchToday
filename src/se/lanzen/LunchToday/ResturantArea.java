@@ -26,10 +26,10 @@ public class ResturantArea {
 		mAreaName = null;
 		mResturants.clear();
 	}
-	public boolean setArea(JSONObject object) {
-		mAreaName = "Test";
-		mCurrentDate = "FooBar";
 
+	public boolean setArea(JSONObject object) {
+		mAreaName = null;
+		mCurrentDate = null;
 		mResturants.clear();
 
 		try {

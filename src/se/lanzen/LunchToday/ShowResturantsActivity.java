@@ -197,6 +197,7 @@ public class ShowResturantsActivity extends ListActivity {
         	ArrayList<String> listOfResturantNames = mArea.getArrayListOfResturantNames(); 
         	Log.e("Menu area","Array of names = " + listOfResturantNames);
         	intent.putExtra((String) getResources().getText(R.string.pref_resturant_names), listOfResturantNames);
+        	intent.putExtra((String) getResources().getText(R.string.pref_current_area_name), mArea.getAreaName());
         	startActivityForResult(intent, AREA_PREFERENCES);
             return true;
         case R.id.preference:

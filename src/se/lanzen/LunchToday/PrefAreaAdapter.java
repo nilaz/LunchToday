@@ -11,11 +11,11 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class PrefAreaAdapter extends ArrayAdapter<String> {
+public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
+	
 
-
-	public PrefAreaAdapter(Context context, final ArrayList<String> resturantNames) {
-		super(context, 0, resturantNames);
+	public PrefAreaAdapter(Context context, final ArrayList<PrefResturantItem> items) {
+		super(context, 0, items);
 		// TODO Auto-generated constructor stub
 	}
 	@Override
@@ -26,17 +26,18 @@ public class PrefAreaAdapter extends ArrayAdapter<String> {
     	}
 
 		final TextView name = (TextView)view.findViewById(R.id.pref_resturant_name);
-		name.setText((getItem(position)));
+		name.setText(getItem(position).getResturantName());
 
 		final CheckBox resturantVisible = (CheckBox)view.findViewById(R.id.pref_resturant_visible);
-		resturantVisible.setChecked(true);
+		resturantVisible.setChecked(getItem(position).isVisible());
 
 		final Spinner sortOrderSpinner = (Spinner)view.findViewById(R.id.pref_resturant_sortorder);
 		ArrayAdapter<CharSequence> mAdapter;
 		mAdapter = ArrayAdapter.createFromResource(getContext(), R.array.pref_resturant_sortorder, android.R.layout.simple_spinner_item); 
 		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
 		sortOrderSpinner.setAdapter(mAdapter);
-
+		sortOrderSpinner.setSelection(getItem(position).getSortOrder());
+		
 		return view;
 	}
 

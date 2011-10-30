@@ -18,7 +18,7 @@ public class PrefResturantItem {
 	public PrefResturantItem(SharedPreferences prefs, String areaName, String resturantName) {
 		mResturantName = resturantName;
 		mVisibleTag = String.format(VISIBLE_TAG,areaName, mResturantName);
-		setVisible(prefs.getBoolean(mVisibleTag, false));
+		setVisible(prefs.getBoolean(mVisibleTag, true));
 		mSortOrderTag = String.format(SORTORDER_TAG,areaName, mResturantName);
 		setSortOrder(prefs.getInt(mSortOrderTag, 2));
 		

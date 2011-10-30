@@ -217,9 +217,10 @@ public class ShowResturantsActivity extends ListActivity {
         	intent.putExtra((String) getResources().getText(R.string.pref_current_area_name), mArea.getAreaName());
         	startActivityForResult(intent, AREA_PREFERENCES);
             return true;
-        case R.id.preference:
-        	startActivityForResult(new Intent(this, AppPreference.class), SHOW_PREFERENCES);            
-        	return true;
+//        case R.id.preference:
+//        	startActivityForResult(new Intent(this, AppPreference.class), SHOW_PREFERENCES);            
+//        	return true;
+            //TODO Lägg tillbaka preference för att välja area
         default:
             return super.onOptionsItemSelected(item);
         }

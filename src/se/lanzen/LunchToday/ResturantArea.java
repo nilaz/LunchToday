@@ -1,12 +1,16 @@
 package se.lanzen.LunchToday;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Comparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import android.content.SharedPreferences;
 
 public class ResturantArea {
 	public static final String AREA_NAME = "Area_Name";
@@ -21,10 +25,12 @@ public class ResturantArea {
 	final private ArrayList<Resturant> mResturants = new ArrayList<Resturant>();
 	private String mAreaName = null;
 	private String mCurrentDate = null;
+	private SharedPreferences mPrefs;
 	
-	public ResturantArea() {
+	public ResturantArea(SharedPreferences prefs) {
 		mAreaName = null;
 		mResturants.clear();
+		mPrefs = prefs;
 	}
 
 	public boolean setArea(JSONObject object) {
@@ -42,6 +48,8 @@ public class ResturantArea {
 			for(int i = 0; i < resturants.length(); i++) {
 				JSONObject jsonRes = resturants.getJSONObject(i);
 				Resturant resturant = new Resturant(jsonRes.getString(RESTURANT));
+				resturant.setVisible(mPrefs.getBoolean(String.format(PrefResturantItem.VISIBLE_TAG,mAreaName, resturant.getName()), true)); 
+				resturant.setSortOrder(mPrefs.getInt(String.format(PrefResturantItem.SORTORDER_TAG,mAreaName, resturant.getName()), 2)); 
 				mResturants.add(resturant);
 				JSONArray menu = jsonRes.getJSONArray(MENU);
 				for(int j = 0; j < menu.length(); j++) {
@@ -93,5 +101,33 @@ public class ResturantArea {
 		}
 		return list;
 	}
-	
+
+	public ArrayList<Resturant> getFilteredResturantArray() {
+		ArrayList<Resturant> filteredResturants = new ArrayList<Resturant>();
+		for(Resturant r : mResturants) {
+			if(r.isVisible()) {
+				filteredResturants.add(r);
+			}
+		}
+		Collections.sort(filteredResturants, new SortOrder());
+		return filteredResturants;
+	}
+
+	private class SortOrder implements Comparator<Resturant> {
+
+	    @Override
+	    public int compare(Resturant r1, Resturant r2) {
+
+	        int rank1 = r1.getSortOrder();
+	        int rank2 = r2.getSortOrder();
+
+	        if (rank1 > rank2){
+	            return +1;
+	        }else if (rank1 < rank2){
+	            return -1;
+	        }else{
+	            return 0;
+	        }
+	    }
+	}
 }

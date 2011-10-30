@@ -11,7 +11,7 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.util.Log;  
-
+import android.widget.AdapterView;
 public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 	private class CheckBoxListener implements View.OnClickListener {
 		private PrefResturantItem mResturant;
@@ -23,6 +23,22 @@ public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 			Log.i("CheckBoxListener","Resturant "+mResturant.getResturantName()+" synlig="+cb.isChecked());
 			mResturant.setVisible(cb.isChecked());
 		}
+	}
+	
+	private class SpinnerListener implements AdapterView.OnItemSelectedListener {
+		private PrefResturantItem mResturant;
+		public SpinnerListener(PrefResturantItem rest) {
+			mResturant = rest;
+		}
+		public void onItemSelected(AdapterView<?> parent,
+                View v, int position, long id) {
+			Log.i("SpinnerListener","Resturant "+mResturant.getResturantName()+" position="+position+" id="+id);
+			mResturant.setSortOrder(position);
+		}
+
+		public void onNothingSelected(AdapterView<?> parent) {
+			// Do nothing
+		}	
 	}
 	
 	public PrefAreaAdapter(Context context, final ArrayList<PrefResturantItem> items) {
@@ -58,6 +74,9 @@ public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 		sortOrderSpinner.setAdapter(mAdapter);
 		sortOrderSpinner.setSelection(resturant.getSortOrder());
 		Log.i("PrefAreaAdapter:getView","sortorder="+resturant.getSortOrder());
+		if(creating) {
+			sortOrderSpinner.setOnItemSelectedListener(new SpinnerListener(resturant));
+		}
 		
 		return view;
 	}

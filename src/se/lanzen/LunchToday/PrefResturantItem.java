@@ -60,5 +60,5 @@ public class PrefResturantItem {
 	public boolean sortOrderIsUpdated() {
 		return mSortOrderUpdated;
 	}
-	
+
 }

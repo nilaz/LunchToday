@@ -35,6 +35,18 @@ public class PrefAreaActivity extends Activity {
         	mPrefAreaItems.add(item);
         }
 
+		initButtons();
+		//Prepare UI
+        PrefAreaAdapter adapter = new PrefAreaAdapter(this, mPrefAreaItems);
+        adapter.setNotifyOnChange(true);
+        ListView lv = (ListView)findViewById(R.id.area_pref_listview);
+		lv.setAdapter(adapter);
+		setTitle("Inställning för " + areaName);
+		//updateUIFromPref();
+		
+    }
+
+	private void initButtons() {
 		// Prepare buttons
 		Button okButton =(Button)findViewById(R.id.area_pref_ok_button); 
 		okButton.setOnClickListener(new View.OnClickListener() { 
@@ -51,15 +63,7 @@ public class PrefAreaActivity extends Activity {
 				finish(); 
 			}
 		});
-		//Prepare UI
-        PrefAreaAdapter adapter = new PrefAreaAdapter(this, mPrefAreaItems);
-        adapter.setNotifyOnChange(true);
-        ListView lv = (ListView)findViewById(R.id.area_pref_listview);
-		lv.setAdapter(adapter);
-		setTitle("Inställning för " + areaName);
-		//updateUIFromPref();
-		
-    }
+	}
 
 	protected void savePreferences() {
 		Editor editor=mPrefs.edit(); 
@@ -70,13 +74,18 @@ public class PrefAreaActivity extends Activity {
 				
 			}
 			
-//			if(resturant.isVisible() != resturant.getVisibleCheckBox().isChecked()) {
+			if(resturant.sortOrderIsUpdated()) {
+				Log.i("PrefAreaActivity:savePreference","Resturang="+resturant.getResturantName()+" sortOrder="+resturant.getSortOrder());
+				editor.putInt(resturant.getSortOrderTag(),resturant.getSortOrder()); 
+				
+			}
+			
+//			int currentSortOrder = resturant.getSortOrder();
+//			int newSortOrder = resturant.getSpinner().getSelectedItemPosition();
+//			Log.i("PrefAreaActivity:savePreference","Resturant="+resturant.getResturantName()+" current="+currentSortOrder+" new="+newSortOrder);
+//			if(currentSortOrder != newSortOrder) {
+//				editor.putInt(resturant.getSortOrderTag(),newSortOrder);
 //			}
-//			if(resturant.getSortOrder() != resturant.getSortOrderSpinner().getSelectedItemPosition()) {
-//				editor.putInt(resturant.getSortOrderTag(),resturant.getSortOrderSpinner().getSelectedItemPosition());
-//				Log.i("PrefAreaActivity:savePreference","Resturang="+resturant.getResturantName()+" new sortOrder="+resturant.getSortOrderSpinner().getSelectedItemPosition());
-//			}
-
 		}
 		editor.commit();
 		

@@ -46,7 +46,7 @@ public class ShowResturantsActivity extends ListActivity {
 		    		Log.i("PrefsListener:initPrefs","onSharedPreferenceChanged");
 		    		Log.i("PrefsListener:initPrefs","key="+key);
 					if(key.equals(PREF_LUNCH_AREA)) {
-			    		Log.i("PrefsListener:initPrefs","Luncha rea updated");
+			    		Log.i("PrefsListener:initPrefs","Lunch area updated");
 			            mActiveLunchAreaName = mPrefs.getString(PREF_LUNCH_AREA, (String) getResources().getText(R.string.defaultArea));
 						refreshResturantArea();
 					}

@@ -43,10 +43,10 @@ public class ShowResturantsActivity extends ListActivity {
 			new SharedPreferences.OnSharedPreferenceChangeListener() { 
 				@Override
 				public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-		    		Log.i("PrefsListener:initPrefs","onSharedPreferenceChanged");
-		    		Log.i("PrefsListener:initPrefs","key="+key);
+		    		// Log.i("PrefsListener:initPrefs","onSharedPreferenceChanged");
+		    		// Log.i("PrefsListener:initPrefs","key="+key);
 					if(key.equals(PREF_LUNCH_AREA)) {
-			    		Log.i("PrefsListener:initPrefs","Lunch area updated");
+			    		// Log.i("PrefsListener:initPrefs","Lunch area updated");
 			            mActiveLunchAreaName = mPrefs.getString(PREF_LUNCH_AREA, (String) getResources().getText(R.string.defaultArea));
 						refreshResturantArea();
 					}
@@ -75,11 +75,11 @@ public class ShowResturantsActivity extends ListActivity {
 	@Override public void onActivityResult(int requestCode,int resultCode,Intent data) { 
     	super.onActivityResult(requestCode,resultCode,data); 
     	if(requestCode == SHOW_PREFERENCES) { 
-    		Log.i("ShowResturantsActivity:onActivityResult","Back from preference");
+    		// Log.i("ShowResturantsActivity:onActivityResult","Back from preference");
     	}
     	if(requestCode == AREA_PREFERENCES) { 
     		if(resultCode == RESULT_OK) {
-        		Log.i("ShowResturantsActivity:onActivityResult","Area uppdaterad");
+        		// Log.i("ShowResturantsActivity:onActivityResult","Area uppdaterad");
         		refreshResturantArea();
     		}
     	}
@@ -95,7 +95,7 @@ public class ShowResturantsActivity extends ListActivity {
 			adapter.notifyDataSetChanged();
 			setTitle(getString(R.string.app_name) + " " + mArea.getCurrentDate());
 		} else {
-			Log.e("no server", "Bad url");
+			// Log.e("no server", "Bad url");
 			showAlertDialogNoServer();
 		}
 	}
@@ -124,7 +124,7 @@ public class ShowResturantsActivity extends ListActivity {
 		// Title for AlertDialog
 		alert.setTitle("Menyn ej aktuell");
 		// Icon for AlertDialog
-		alert.setIcon(R.drawable.dagens_lunch);
+		alert.setIcon(R.drawable.ic_launcher);
 		alert.show();
 	}
 
@@ -171,7 +171,7 @@ public class ShowResturantsActivity extends ListActivity {
 		// Title for AlertDialog
 		alert.setTitle("Ny version");
 		// Icon for AlertDialog
-		alert.setIcon(R.drawable.dagens_lunch);
+		alert.setIcon(R.drawable.ic_launcher);
 		alert.show();
 	}
 
@@ -189,7 +189,7 @@ public class ShowResturantsActivity extends ListActivity {
 		// Title for AlertDialog
 		alert.setTitle("Problem");
 		// Icon for AlertDialog
-		alert.setIcon(R.drawable.dagens_lunch);
+		alert.setIcon(R.drawable.ic_launcher);
 		alert.show();
 	}
 
@@ -202,17 +202,17 @@ public class ShowResturantsActivity extends ListActivity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	Log.e("ShowResturantsActivity:onOptionsItemSelected","item = " + item.getItemId());
+    	// Log.e("ShowResturantsActivity:onOptionsItemSelected","item = " + item.getItemId());
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.about:
         	startActivity(new Intent(this, AboutActivity.class));
             return true;
         case R.id.area:
-        	Log.e("Menu area","Preference for area");
+        	// Log.e("Menu area","Preference for area");
         	Intent intent = new Intent(this, PrefAreaActivity.class);
         	ArrayList<String> listOfResturantNames = mArea.getArrayListOfResturantNames(); 
-        	Log.e("Menu area","Array of names = " + listOfResturantNames);
+        	// Log.e("Menu area","Array of names = " + listOfResturantNames);
         	intent.putExtra((String) getResources().getText(R.string.pref_resturant_names), listOfResturantNames);
         	intent.putExtra((String) getResources().getText(R.string.pref_current_area_name), mArea.getAreaName());
         	startActivityForResult(intent, AREA_PREFERENCES);

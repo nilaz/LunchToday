@@ -4,7 +4,7 @@
     <string name="ok">OK</string>
     <string name="aboutText">Dagens Lunch är utvecklad av\nNiklas Lanzén.</string>
     <string name="aboutText2">Se följande websida för nyheter:</string>
-    <string name="version">0.1.5</string>
+    <string name="version">1.0.1</string>
     <string name="defaultArea">http://www.lanzen.se/LunchToday/MjardeviArea.json</string>
     <string name="button_back">Tillbaka</string>
     <string name="aboutText3">http://blogg.lanzen.se/tag/dagens-lunch/</string>

@@ -21,13 +21,13 @@ public class PrefAreaActivity extends Activity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.area_pref);
-        // Log.i("PrefAreaActivity:onCreate","key="+(String) getResources().getText(R.string.pref_resturant_names));
+        Log.i("PrefAreaActivity:onCreate","key="+(String) getResources().getText(R.string.pref_resturant_names));
         
         // Init pref
         ArrayList<String> resturants = getIntent().getStringArrayListExtra((String) getResources().getText(R.string.pref_resturant_names));
-        // Log.e("PrefAreaActivity:onCreate","resturants="+resturants);
+        Log.e("PrefAreaActivity:onCreate","resturants="+resturants);
         String areaName = getIntent().getStringExtra((String) getResources().getText(R.string.pref_current_area_name));
-        // Log.e("PrefAreaActivity:onCreate","area name="+areaName);
+        Log.e("PrefAreaActivity:onCreate","area name="+areaName);
         mPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         mPrefAreaItems.clear();
         for(String resturant : resturants) {
@@ -69,20 +69,20 @@ public class PrefAreaActivity extends Activity {
 		Editor editor=mPrefs.edit(); 
 		for(PrefResturantItem resturant : mPrefAreaItems) {
 			if(resturant.visibleIsUpdated()) {
-				// Log.i("PrefAreaActivity:savePreference","Resturang="+resturant.getResturantName()+" visible="+resturant.isVisible());
+				Log.i("PrefAreaActivity:savePreference","Resturang="+resturant.getResturantName()+" visible="+resturant.isVisible());
 				editor.putBoolean(resturant.getVisibleTag(),resturant.isVisible()); 
 				
 			}
 			
 			if(resturant.sortOrderIsUpdated()) {
-				// Log.i("PrefAreaActivity:savePreference","Resturang="+resturant.getResturantName()+" sortOrder="+resturant.getSortOrder());
+				Log.i("PrefAreaActivity:savePreference","Resturang="+resturant.getResturantName()+" sortOrder="+resturant.getSortOrder());
 				editor.putInt(resturant.getSortOrderTag(),resturant.getSortOrder()); 
 				
 			}
 			
 //			int currentSortOrder = resturant.getSortOrder();
 //			int newSortOrder = resturant.getSpinner().getSelectedItemPosition();
-//			// Log.i("PrefAreaActivity:savePreference","Resturant="+resturant.getResturantName()+" current="+currentSortOrder+" new="+newSortOrder);
+//			Log.i("PrefAreaActivity:savePreference","Resturant="+resturant.getResturantName()+" current="+currentSortOrder+" new="+newSortOrder);
 //			if(currentSortOrder != newSortOrder) {
 //				editor.putInt(resturant.getSortOrderTag(),newSortOrder);
 //			}

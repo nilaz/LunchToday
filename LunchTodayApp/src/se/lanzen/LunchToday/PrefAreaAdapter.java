@@ -20,7 +20,7 @@ public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 		}
 		public void onClick(View v) {
 			CheckBox cb = (CheckBox)v;
-			// Log.i("CheckBoxListener","Resturant "+mResturant.getResturantName()+" synlig="+cb.isChecked());
+			Log.i("CheckBoxListener","Resturant "+mResturant.getResturantName()+" synlig="+cb.isChecked());
 			mResturant.setVisible(cb.isChecked());
 		}
 	}
@@ -32,7 +32,7 @@ public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 		}
 		public void onItemSelected(AdapterView<?> parent,
                 View v, int position, long id) {
-			// Log.i("SpinnerListener","Resturant "+mResturant.getResturantName()+" position="+position+" id="+id);
+			Log.i("SpinnerListener","Resturant "+mResturant.getResturantName()+" position="+position+" id="+id);
 			mResturant.setSortOrder(position);
 		}
 
@@ -62,7 +62,7 @@ public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 
 		final CheckBox resturantVisible = (CheckBox)view.findViewById(R.id.pref_resturant_visible);
 		resturantVisible.setChecked(resturant.isVisible());
-		// Log.i("PrefAreaAdapter:getView","visible="+resturant.isVisible());
+		Log.i("PrefAreaAdapter:getView","visible="+resturant.isVisible());
 		if(creating) {
 			resturantVisible.setOnClickListener(new CheckBoxListener(resturant));
 		}
@@ -73,7 +73,7 @@ public class PrefAreaAdapter extends ArrayAdapter<PrefResturantItem> {
 		mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); 
 		sortOrderSpinner.setAdapter(mAdapter);
 		sortOrderSpinner.setSelection(resturant.getSortOrder());
-		// Log.i("PrefAreaAdapter:getView","sortorder="+resturant.getSortOrder());
+		Log.i("PrefAreaAdapter:getView","sortorder="+resturant.getSortOrder());
 		if(creating) {
 			sortOrderSpinner.setOnItemSelectedListener(new SpinnerListener(resturant));
 		}

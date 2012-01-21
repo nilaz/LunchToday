@@ -10,6 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.android.maps.GeoPoint;
+
 import android.content.SharedPreferences;
 
 public class ResturantArea {
@@ -21,6 +23,7 @@ public class ResturantArea {
 	public static final String RESTURANT_LIST = "ResturantList";
 	public static final String RESTURANT = "Resturant";
 	public static final String MENU = "Menu";
+	public static final String POLYGON = "Polygon";
 	
 	final private ArrayList<Resturant> mResturants = new ArrayList<Resturant>();
 	private String mAreaName = null;
@@ -55,6 +58,16 @@ public class ResturantArea {
 				for(int j = 0; j < menu.length(); j++) {
 					resturant.addMenuItem(menu.getString(j));
 				}
+				List<GeoPoint> polygon = new ArrayList<GeoPoint>(); 
+				try {
+					JSONArray jsonPolygon = jsonRes.getJSONArray(POLYGON);
+					for(int c = 0; c < jsonPolygon.length(); c++) {
+						JSONArray jsonCoord = jsonPolygon.getJSONArray(c);
+						polygon.add(new GeoPoint((int)(jsonCoord.getDouble(1)*1E6),
+												  (int)(jsonCoord.getDouble(0)*1E6)));
+					}
+				} catch(JSONException e) {}
+				resturant.setPolygon(polygon);
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

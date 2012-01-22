@@ -55,9 +55,9 @@ public class ResturantMap extends MapActivity {
 //		
 //		public void onStatusChanged(String provider,int status, Bundle extras) {} 
 //	};
-	private boolean mGPSavailable = false;
+	//private boolean mGPSavailable = false;
 	private Menu mMenu = null;
-	private GeoPoint mGPCenter;
+	private GeoPoint mCenterOfPolygon;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -67,18 +67,11 @@ public class ResturantMap extends MapActivity {
         mMapView = (MapView)findViewById(R.id.mapview);
         mMapController=mMapView.getController();
         mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        mGPSavailable  = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        //mGPSavailable  = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         readPolygon();
         initMap();
-        initMenu();
         drawPolygon();
     }
-
-
-	private void initMenu() {
-		
-	}
-
 
 	private void readPolygon() {
 		String p = getIntent().getStringExtra((String)getResources().getText(R.string.map_polygon));
@@ -104,7 +97,7 @@ public class ResturantMap extends MapActivity {
 
 	private void findCenterOfPolygon() {
 		if(mPolygon.size() <= 0) {
-			mGPCenter = null;
+			mCenterOfPolygon = null;
 			return;
 		}
 		long latitude = 0;
@@ -113,7 +106,7 @@ public class ResturantMap extends MapActivity {
 			latitude  += gp.getLatitudeE6();
 			longitude += gp.getLongitudeE6();
 		}
-		mGPCenter = new GeoPoint((int)(latitude / mPolygon.size()), (int)(longitude / mPolygon.size()));
+		mCenterOfPolygon = new GeoPoint((int)(latitude / mPolygon.size()), (int)(longitude / mPolygon.size()));
 	}
 
 	private void drawPolygon() {
@@ -126,19 +119,21 @@ public class ResturantMap extends MapActivity {
 		//Log.i("drawPolygon","ska lägga till oi");
 
 		findCenterOfPolygon();
-		if(mGPCenter == null)
+		if(mCenterOfPolygon == null) {
+			Log.e("drawPolygon","mCenterOfPolygon = null");
 			return;
+		}
 		Drawable drawable = this.getResources().getDrawable(R.drawable.restaurant);
 		PlacemarkOverlay itemizedOverlay = new PlacemarkOverlay(drawable, this);
 		itemizedOverlay.setPolygon(mPolygon);
 		itemizedOverlay.setText(mResturantName);
 		itemizedOverlay.setPolygonColor(Color.RED);
-		itemizedOverlay.setCenter(mGPCenter);
-		OverlayItem oi = new OverlayItem(mGPCenter, mResturantName, "Tom text");
+		itemizedOverlay.setCenter(mCenterOfPolygon);
+		OverlayItem oi = new OverlayItem(mCenterOfPolygon, mResturantName, "");
 		itemizedOverlay.addOverlay(oi);
 		mMapOverlays.add(itemizedOverlay);
 		mMapView.invalidate();
-		mMapController.setCenter(mGPCenter);
+		mMapController.setCenter(mCenterOfPolygon);
 		
 	}
 
@@ -149,20 +144,29 @@ public class ResturantMap extends MapActivity {
         mMapView.setBuiltInZoomControls(true); 
          
         Location location= mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        
-        updateWithNewLocation(location); 
+        //updateWithNewLocation(location); 
         //mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,10, mLocationListener);
 	}
 
-	private void updateWithNewLocation(Location location) {
-		if(location!=null) { 
-			//Update the map location. 
-			GeoPoint point = locationToGeoPoint(location); 
-			mMapController.setCenter(point); 
-		} 
+//	private void updateWithNewLocation(Location location) {
+//		if(location!=null) { 
+//			//Update the map location. 
+//			GeoPoint point = locationToGeoPoint(location); 
+//			setCenter(point); 
+//		} 
+//	}
+
+	private void setCenter(GeoPoint point) {
+		if(point != null) {
+//			mMapController.setCenter(point);
+			mMapController.animateTo(point);
+		}
 	}
 
 	private GeoPoint locationToGeoPoint(Location location) {
+		if(location == null) {
+			return null;
+		}
 		Double geoLat=location.getLatitude()*1E6; 
 		Double geoLng=location.getLongitude()*1E6; 
 		GeoPoint point = new GeoPoint(geoLat.intValue(), geoLng.intValue());
@@ -198,6 +202,8 @@ public class ResturantMap extends MapActivity {
     		// Stop showing me on map
     		if(mMyLocationOverlay != null) {
     			mMyLocationOverlay.disableMyLocation();
+    			setCenter(mCenterOfPolygon);
+    	        mMapController.setZoom(17); 
     			Log.i("menuShowMe","disable");
     		}
     	} else {

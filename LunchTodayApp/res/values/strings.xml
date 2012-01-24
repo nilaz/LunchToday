@@ -19,7 +19,7 @@
     <string name="menu_show_me">Visa mig på kartan</string>   
     <string name="menu_hide_me">Göm mig</string>   
     <!-- Debug finger print 2F:FB:30:6F:8D:8E:D1:FC:F3:A4:C4:BD:94:8C:5E:21 -->
-    <string name="xxmapAPIkey">0cF1pMlB95MUr6IW-6bUAiCg1HZTElqddLHm25A</string>
+    <string name="xmapAPIkey">0cF1pMlB95MUr6IW-6bUAiCg1HZTElqddLHm25A</string>
     <!-- Production finger print BC:29:7D:92:2D:30:67:47:79:A8:54:FC:DF:2E:0A:18 -->
     <string name="mapAPIkey">0cF1pMlB95MWjRW-J5d5dz70kMLuducI21Kk0SQ</string>
 </resources>

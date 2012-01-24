@@ -59,6 +59,7 @@ public class ResturantMap extends MapActivity {
 	//private boolean mGPSavailable = false;
 	private Menu mMenu = null;
 	private GeoPoint mCenterOfPolygon;
+	private boolean mIsActiveMyLocationOverlay;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -71,7 +72,7 @@ public class ResturantMap extends MapActivity {
         //mGPSavailable  = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         readPolygon();
         initMap();
-        drawPolygon();
+        initOverlays();
     }
 
 	private void readPolygon() {
@@ -80,17 +81,17 @@ public class ResturantMap extends MapActivity {
 			return;
 		}
 		mResturantName = getIntent().getStringExtra((String)getResources().getText(R.string.map_resturant_name));
-		//Log.i("readPolygon",p);
+		//// Log.i("readPolygon",p);
 		try {
 			JSONArray polygon = new JSONArray(p);
 			for(int i = 0; i < polygon.length(); i++) {
 				JSONArray point = polygon.getJSONArray(i);
 				mPolygon.add(new GeoPoint(point.getInt(0), point.getInt(1)));
-				//Log.i("readPolygon","GeoPoint="+new GeoPoint(point.getInt(0), point.getInt(1)));
+				//// Log.i("readPolygon","GeoPoint="+new GeoPoint(point.getInt(0), point.getInt(1)));
 			}
 			
 		} catch (Exception e) {
-			Log.e("readPolygon()",e.toString());
+			// Log.e("readPolygon()",e.toString());
 			mPolygon.clear();
 		}
 		
@@ -110,18 +111,18 @@ public class ResturantMap extends MapActivity {
 		mCenterOfPolygon = new GeoPoint((int)(latitude / mPolygon.size()), (int)(longitude / mPolygon.size()));
 	}
 
-	private void drawPolygon() {
+	private void initOverlays() {
     	mMapOverlays = mMapView.getOverlays();
     	mMapOverlays.clear();
     	// Add MyLocationOverlay
 		mMyLocationOverlay = new MyLocationOverlay(this, mMapView);
-		mMyLocationOverlay.disableMyLocation();
+		disableMyLocation();
 		mMapOverlays.add(mMyLocationOverlay);
-		//Log.i("drawPolygon","ska lägga till oi");
+		//// Log.i("drawPolygon","ska lägga till oi");
 
 		findCenterOfPolygon();
 		if(mCenterOfPolygon == null) {
-			Log.e("drawPolygon","mCenterOfPolygon = null");
+			// Log.e("drawPolygon","mCenterOfPolygon = null");
 			return;
 		}
 		Drawable drawable = this.getResources().getDrawable(R.drawable.restaurant);
@@ -138,6 +139,24 @@ public class ResturantMap extends MapActivity {
 		mMapView.invalidate();
 		mMapController.setCenter(mCenterOfPolygon);
 		
+	}
+
+	private void disableMyLocation() {
+		mIsActiveMyLocationOverlay = false;
+		setMyLocationOverlay();
+	}
+
+	private void enableMyLocation() {
+		mIsActiveMyLocationOverlay = true;
+		setMyLocationOverlay();
+	}
+
+	private void setMyLocationOverlay() {
+		if(mIsActiveMyLocationOverlay) {
+			mMyLocationOverlay.enableMyLocation();
+		} else {
+			mMyLocationOverlay.disableMyLocation();
+		}
 	}
 
 	private void initMap() {
@@ -178,17 +197,17 @@ public class ResturantMap extends MapActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	// Log.e("ShowResturantsActivity:onOptionsItemSelected","item = " + item.getItemId());
+    	// // Log.e("ShowResturantsActivity:onOptionsItemSelected","item = " + item.getItemId());
         // Handle item selection
         switch (item.getItemId()) {
         case R.id.show_me:
         	menuShowMe();
         	return true;
 //        case R.id.find:
-//        	// Log.e("Menu area","Preference for area");
+//        	// // Log.e("Menu area","Preference for area");
 //        	Intent intent = new Intent(this, SearchActivity.class);
 //        	String geoData = mCompany.toJSONstring(); 
-//        	// Log.e("Menu area","Array of names = " + listOfResturantNames);
+//        	// // Log.e("Menu area","Array of names = " + listOfResturantNames);
 //        	intent.putExtra(COMPANY, geoData);
 //        	startActivityForResult(intent, ACTIVITY_SEARCH);
 //            return true;
@@ -204,15 +223,15 @@ public class ResturantMap extends MapActivity {
     	if(mStateShowMeOnMap) {
     		// Stop showing me on map
     		if(mMyLocationOverlay != null) {
-    			mMyLocationOverlay.disableMyLocation();
+    			disableMyLocation();
     			setCenter(mCenterOfPolygon);
     	        mMapController.setZoom(17); 
-    			Log.i("menuShowMe","disable");
+    			// Log.i("menuShowMe","disable");
     		}
     	} else {
     		// Start showing me on map
-    		mMyLocationOverlay.enableMyLocation();
-			Log.i("menuShowMe","enable");
+    		enableMyLocation();
+			// Log.i("menuShowMe","enable");
 			if(! zoomToShowMeAndResturant()) {
 				return;
 			}
@@ -301,5 +320,15 @@ public class ResturantMap extends MapActivity {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    protected void onResume() {
+        super.onResume();
+        setMyLocationOverlay();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+		mMyLocationOverlay.disableMyLocation();
+    }
 
 }

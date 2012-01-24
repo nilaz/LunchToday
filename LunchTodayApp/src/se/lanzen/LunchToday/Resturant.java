@@ -81,7 +81,7 @@ public class Resturant {
 		} catch(Exception e) {
 			return null;
 		}
-		Log.i("getPolygonAsJSON",jp.toString());
+		// Log.i("getPolygonAsJSON",jp.toString());
 		return jp.toString();
 	}
 }

@@ -26,7 +26,8 @@ public class PlacemarkOverlay extends ItemizedOverlay<OverlayItem> {
 	private Context mContext;
 	private List<GeoPoint> mPolygon = null;
 	private String mResturantName;
-	private GeoPoint mCenter; 
+	private GeoPoint mCenter;
+	private int mDrawableHeight; 
 	
 	@Override
 	public void draw(Canvas canvas, MapView mv, boolean shadow)
@@ -56,7 +57,10 @@ public class PlacemarkOverlay extends ItemizedOverlay<OverlayItem> {
 	        textPaint.setTextSize(16);
 	        textPaint.setTypeface(Typeface.DEFAULT_BOLD);
 	        projection.toPixels(mCenter, from);
-	        textPaint.getTextPath(mResturantName, 0, mResturantName.length(), from.x, from.y - 40, path);
+	        textPaint.getTextPath(mResturantName, 0, 
+	        					  mResturantName.length(), 
+	        					  from.x, 
+	        					  from.y - mDrawableHeight - 10, path);
 	        canvas.drawPath(path, strokePaint);
 	        canvas.drawPath(path, textPaint);
 	    }
@@ -115,6 +119,10 @@ public class PlacemarkOverlay extends ItemizedOverlay<OverlayItem> {
 
 	public void setCenter(GeoPoint gp) {
 		mCenter = gp;
+	}
+
+	public void setDrawableHeight(int height) {
+		mDrawableHeight = height;
 	}
 
 }

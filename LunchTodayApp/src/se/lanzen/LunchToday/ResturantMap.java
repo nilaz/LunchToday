@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
@@ -125,6 +126,8 @@ public class ResturantMap extends MapActivity {
 		}
 		Drawable drawable = this.getResources().getDrawable(R.drawable.restaurant);
 		PlacemarkOverlay itemizedOverlay = new PlacemarkOverlay(drawable, this);
+		Rect drawableRect = drawable.getBounds();
+		itemizedOverlay.setDrawableHeight(Math.abs(drawableRect.height()));
 		itemizedOverlay.setPolygon(mPolygon);
 		itemizedOverlay.setText(mResturantName);
 		itemizedOverlay.setPolygonColor(Color.RED);

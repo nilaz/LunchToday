@@ -37,6 +37,10 @@ public class ResturantArea {
 	}
 
 	public boolean setArea(JSONObject object) {
+		if(object == null) {
+			return false;
+		}
+		
 		mAreaName = null; 
 		mCurrentDate = null;
 		mResturants.clear();

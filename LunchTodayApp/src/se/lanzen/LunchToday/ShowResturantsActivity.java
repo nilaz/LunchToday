@@ -266,8 +266,10 @@ public class ShowResturantsActivity extends ListActivity {
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
+			return null;
 		}
 		JSONObject object;
 		try {

@@ -64,7 +64,6 @@ public class ShowResturantsActivity extends ListActivity {
         initPrefs();
         mArea = new ResturantArea(mPrefs); 
         refreshResturantArea();
-        checkForNewVersion();
         checkForUpdatedMenu();
         getListView().setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
@@ -140,53 +139,6 @@ public class ShowResturantsActivity extends ListActivity {
 		AlertDialog alert = alt_bld.create();
 		// Title for AlertDialog
 		alert.setTitle("Menyn ej aktuell");
-		// Icon for AlertDialog
-		alert.setIcon(R.drawable.ic_launcher);
-		alert.show();
-	}
-
-	private void checkForNewVersion() {
-		int currentVersion = getCurrentVersion();	
-		int latestVersion = getLatestVersion();
-		if(currentVersion < latestVersion) {
-			showAlertDialogNewVersionAvailable();
-		}
-		
-	}
-
-	private int getCurrentVersion() {
-		PackageInfo pinfo;
-		try {
-			pinfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-			return pinfo.versionCode;
-		} catch (NameNotFoundException e) {
-			// Can not happen
-		}
-		return 999999;
-	}
-
-	private int getLatestVersion() {
-		JSONObject json = getJSONfromURL((String) getResources().getText(R.string.latestVersionURL));
-		try {
-			return json.getInt((String) getResources().getText(R.string.latestVersion));
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
-	private void showAlertDialogNewVersionAvailable() {
-		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-		alt_bld.setMessage("Det finns en nyare version av " + getString(R.string.app_name) + ". Gå till sidan http://blogg.lanzen.se/tag/dagens-lunch för att uppdatera!");
-		alt_bld.setCancelable(false);
-		alt_bld.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				// Do nothing
-			}
-		});
-		AlertDialog alert = alt_bld.create();
-		// Title for AlertDialog
-		alert.setTitle("Ny version");
 		// Icon for AlertDialog
 		alert.setIcon(R.drawable.ic_launcher);
 		alert.show();

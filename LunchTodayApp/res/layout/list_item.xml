@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="100px"
+    android:layout_width="100dp"
     android:layout_height="wrap_content"
     android:background="@drawable/background_black"
-    android:padding="15dip"
+    android:padding="15sp"
 >
     <ImageView
         android:id="@+id/resturant_photo"
@@ -18,12 +18,14 @@
         android:layout_toRightOf="@id/resturant_photo"
         android:paddingBottom="5dip"
         android:textStyle="bold"
-        android:textSize="20dip"/>
+        android:textSize="20sp"/>
+
     <TextView
         android:id="@+id/resturant_menu"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/resturant_photo"
         android:layout_below="@id/resturant_name"
-        android:textSize="18dip"/>
+        android:layout_toRightOf="@id/resturant_photo"
+        android:textSize="18sp" />
+
 </RelativeLayout>

@@ -33,7 +33,10 @@ public class Resturant {
 		mMenuItems.add(item);
 	}
 
-	public String menu() {
+	public List<String> getMenuList() {
+		return mMenuItems;
+	}
+	private String menu() {
 		String menu = "";
 		boolean notFirst = false;
 		for(String dish : mMenuItems) {

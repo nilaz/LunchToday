@@ -7,6 +7,7 @@
     <string name="iconText1">Stort tack till Maps Icons Collection:</string>
     <string name="iconText2">http://mapicons.nicolasmollet.com</string>
     <string name="version">1.2.2</string>
+    <string name="bullet_symbol">- </string>
     <string name="defaultArea">http://www.lanzen.se/LunchToday/MjardeviArea.json</string>
     <string name="button_back">Tillbaka</string>
     <string name="aboutText3">http://blogg.lanzen.se/tag/dagens-lunch/</string>

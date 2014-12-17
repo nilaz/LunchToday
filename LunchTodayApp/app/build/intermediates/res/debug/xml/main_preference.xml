@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+                       
+  <ListPreference
+   android:key="PREF_LUNCH_AREA"
+   android:title="Luncharea"
+   android:summary="Välj vilken luncharea som ska visas"
+   android:entries="@array/lunch_areas_options"
+   android:entryValues="@array/lunch_areas_values"
+   android:dialogTitle="Välj luncharea"
+  />
+</PreferenceScreen>
+ 
+ <!-- From: file:/C:/Users/elannik/workspace/LunchToday/LunchTodayApp/app/src/main/res/xml/main_preference.xml -->

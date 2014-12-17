@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent">
+  <ListView 
+  	android:layout_width="fill_parent" 
+  	android:id="@+id/area_pref_listview" 
+  	android:layout_height="wrap_content" 
+  	android:layout_alignParentTop="true" 
+  	android:layout_alignParentLeft="true"/>
+  <LinearLayout 
+  	android:layout_width="wrap_content" 
+  	android:id="@+id/area_pref_button_container" 
+  	android:orientation="horizontal" 
+    android:layout_below="@id/area_pref_listview"
+  	android:layout_height="wrap_content" 
+  	android:layout_marginLeft="14dp" 
+  	android:layout_centerHorizontal="true">
+	  <Button 
+	  	android:layout_width="wrap_content" 
+	  	android:id="@+id/area_pref_ok_button" 
+	  	android:text="Ok" 
+	  	android:layout_height="wrap_content" 
+	  	/>
+	  <Button 
+	  	android:layout_width="wrap_content" 
+	  	android:id="@+id/area_pref_cancel_button" 
+	  	android:text="Avbryt" 
+	  	android:layout_height="wrap_content" 
+	  />
+  	</LinearLayout>
+  
+</RelativeLayout>
+<!-- From: file:/C:/Users/elannik/workspace/LunchToday/LunchTodayApp/app/src/main/res/layout/area_pref.xml -->

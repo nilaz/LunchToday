@@ -18,6 +18,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -32,6 +33,8 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 public class ShowResturantsActivity extends ListActivity {
 	private ResturantArea mArea;
@@ -60,22 +63,26 @@ public class ShowResturantsActivity extends ListActivity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initPrefs();
-        mArea = new ResturantArea(mPrefs); 
-        refreshResturantArea();
-        checkForUpdatedMenu();
-        getListView().setOnItemClickListener(new OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-                     //i couldn't reach here
-             Resturant r = (Resturant)(parent.getItemAtPosition(position));
-             // Log.v("Onclicklistener","Clicked at "+r.getName());
-             String polygonJSON = r.getPolygonAsJSON();
-             // Log.v("Onclicklistener","Clicked at "+r.getName() + " Polygon="+polygonJSON);
-             Intent intent = new Intent(getApplicationContext(), ResturantMap.class);
-         	 intent.putExtra((String) getResources().getText(R.string.map_resturant_name), r.getName());
-         	 intent.putExtra((String) getResources().getText(R.string.map_polygon), polygonJSON);
-         	 startActivityForResult(intent, SHOW_MAP);
+        mArea = new ResturantArea(mPrefs);
+        if (isNetworkAvailable()) {
+            refreshResturantArea();
+            checkForUpdatedMenu();
+            getListView().setOnItemClickListener(new OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    //i couldn't reach here
+                    Resturant r = (Resturant) (parent.getItemAtPosition(position));
+                    // Log.v("Onclicklistener","Clicked at "+r.getName());
+                    String polygonJSON = r.getPolygonAsJSON();
+                    // Log.v("Onclicklistener","Clicked at "+r.getName() + " Polygon="+polygonJSON);
+                    Intent intent = new Intent(getApplicationContext(), ResturantMap.class);
+                    intent.putExtra((String) getResources().getText(R.string.map_resturant_name), r.getName());
+                    intent.putExtra((String) getResources().getText(R.string.map_polygon), polygonJSON);
+                    startActivityForResult(intent, SHOW_MAP);
+                }
+            });
+        } else { // No network available
+            showAlertNoNetwork();
         }
-      }); 
     }
 
     private void initPrefs() {
@@ -142,23 +149,41 @@ public class ShowResturantsActivity extends ListActivity {
 		alert.show();
 	}
 
-	private void showAlertDialogNoServer() {
-		AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-		alt_bld.setMessage("Appen lyckades inte få kontakt med servern. Försök igen senare! " +
-				getResources().getText(R.string.app_name) + " kommer att avslutas.");
-		alt_bld.setCancelable(false);
-		alt_bld.setPositiveButton("Avsluta", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
-				finish();
-			}
-		});
-		AlertDialog alert = alt_bld.create();
-		// Title for AlertDialog
-		alert.setTitle("Problem");
-		// Icon for AlertDialog
-		alert.setIcon(R.drawable.ic_launcher);
-		alert.show();
-	}
+    private void showAlertDialogNoServer() {
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+        alt_bld.setMessage("Appen lyckades inte få kontakt med servern. Försök igen senare! " +
+                getResources().getText(R.string.app_name) + " kommer att avslutas.");
+        alt_bld.setCancelable(false);
+        alt_bld.setPositiveButton("Avsluta", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        AlertDialog alert = alt_bld.create();
+        // Title for AlertDialog
+        alert.setTitle("Problem");
+        // Icon for AlertDialog
+        alert.setIcon(R.drawable.ic_launcher);
+        alert.show();
+    }
+
+    private void showAlertNoNetwork() {
+        AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+        alt_bld.setMessage("Det finns ingen nätverksförbindelse! " +
+                getResources().getText(R.string.app_name) + " kommer att avslutas.");
+        alt_bld.setCancelable(false);
+        alt_bld.setPositiveButton("Avsluta", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        });
+        AlertDialog alert = alt_bld.create();
+        // Title for AlertDialog
+        alert.setTitle("Problem");
+        // Icon for AlertDialog
+        alert.setIcon(R.drawable.ic_launcher);
+        alert.show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -192,8 +217,20 @@ public class ShowResturantsActivity extends ListActivity {
             return super.onOptionsItemSelected(item);
         }
     }
-    
-	private JSONObject getJSONfromURL(String url){
+
+    public boolean isNetworkAvailable() {
+        ConnectivityManager cm = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        // if no network is available networkInfo will be null
+        // otherwise check if we are connected
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        return false;
+    }
+
+    private JSONObject getJSONfromURL(String url){
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);

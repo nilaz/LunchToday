@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<se.lanzen.LunchToday.ResturantListView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/my_list"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000"
->
-</se.lanzen.LunchToday.ResturantListView><!-- From: file:/C:/Users/elannik/workspace/LunchToday/LunchTodayApp/app/src/main/res/layout/main.xml -->
